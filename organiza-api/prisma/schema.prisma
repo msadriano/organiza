@@ -20,7 +20,7 @@ enum Status {
 }
 
 model User {
-  id String @id @default(uuid())
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email String @unique
   name String?
   createdAt DateTime @default(now()) @map("created_at")
@@ -30,8 +30,8 @@ model User {
 }
 
 model List {
-  id String @id @default(uuid())
-  userId String @map("user_id")
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @map("user_id") @db.Uuid
   title String
   color String @default("#2563eb")
   createdAt DateTime @default(now()) @map("created_at")
@@ -42,8 +42,8 @@ model List {
 }
 
 model Task {
-  id String @id @default(uuid())
-  listId String @map("list_id")
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listId String @map("list_id") @db.Uuid
   title String
   description String?
   priority Priority @default(LOW)
