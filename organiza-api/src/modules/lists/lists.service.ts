@@ -29,13 +29,22 @@ class ListsService {
     id: string,
     title: string,
     color: string,
-  ): Promise<void> {
-    await prisma.list.update({
+  ): Promise<List> {
+    const selectedList = await prisma.list.findUnique({ where: { id } });
+
+    if (!selectedList) {
+      throw new AppError(
+        "A lista selecionada não existe no banco de dados",
+        404,
+      );
+    }
+
+    const updatedList = await prisma.list.update({
       where: { id },
       data: { ...(title && { title }), ...(color && { color }) },
     });
 
-    return;
+    return updatedList;
   }
 
   static async deleteList(id: string): Promise<List> {

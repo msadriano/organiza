@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AnyZodObject, ZodError } from "zod";
 
 async function handleValidation(
+  req: Request,
   data: any,
   schema: AnyZodObject,
   res: Response,
@@ -19,23 +20,24 @@ async function handleValidation(
       })),
     });
   }
+  req.body = result.data;
   next();
 }
 
 export function validateBody(schema: AnyZodObject) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    await handleValidation(req.body, schema, res, next);
+    await handleValidation(req, req.body, schema, res, next);
   };
 }
 
 export function validateParams(schema: AnyZodObject) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    await handleValidation(req.params, schema, res, next);
+    await handleValidation(req, req.params, schema, res, next);
   };
 }
 
 export function validateQuery(schema: AnyZodObject) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    await handleValidation(req.query, schema, res, next);
+    await handleValidation(req, req.query, schema, res, next);
   };
 }
