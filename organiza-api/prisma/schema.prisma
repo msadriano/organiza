@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  lists List[]
+}
+
+model List {
+  id String @id @default(uuid())
+  userId String @map("user_id")
+  title String
+  color String @default("#2563eb")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+  tasks Task[]
+}
+
+model Task {
+  id String @id @default(uuid())
+  listId String @map("list_id")
+  title String
+  description String?
+  priority Priority @default(LOW)
+  status Status @default(PENDING)
+  dueDate DateTime? @map("due_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  list List @relation(fields: [listId], references: [id])
+}
