@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { Task } from "../../types/task.type";
 import { AppError } from "../../utils/app.error";
-import { TaskCreateSchema } from "./tasks.schema";
+import { TaskCreateManySchema, TaskCreateSchema } from "./tasks.schema";
 import { Priority, Status } from "@prisma/client";
 
 class TaskService {
@@ -61,6 +61,14 @@ class TaskService {
     const deletedTask = await prisma.task.delete({ where: { id } });
 
     return deletedTask;
+  }
+
+  static async createManyTasks(data: TaskCreateManySchema[]) {
+    const tasksCreated = await prisma.task.createMany({
+      data: data,
+    });
+
+    return tasksCreated;
   }
 }
 

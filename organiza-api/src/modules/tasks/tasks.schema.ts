@@ -21,7 +21,16 @@ const taskUpdateSchema = z.object({
   dueDate: z.coerce.date().optional(),
 });
 
-export { taskCreateSchema, taskUpdateSchema };
+const taskCreateManySchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  priority: z.nativeEnum(Priority).default("LOW"),
+  dueDate: z.coerce.date().optional(),
+  listId: z.string(),
+});
+
+export { taskCreateSchema, taskUpdateSchema, taskCreateManySchema };
 
 export type TaskCreateSchema = z.infer<typeof taskCreateSchema>;
 export type TaskUpdateSchema = z.infer<typeof taskUpdateSchema>;
+export type TaskCreateManySchema = z.infer<typeof taskCreateManySchema>;

@@ -5,5 +5,6 @@ declare namespace NodeJS {
     ANTHROPIC_API_KEY: string;
     SUPABASE_JWKS_URI: string;
     ANTHROPIC_API_KEY: string;
+    GEMINI_APY_KEY: string;
   }
 }

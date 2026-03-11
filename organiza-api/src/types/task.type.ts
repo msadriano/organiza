@@ -9,3 +9,10 @@ export interface Task {
   createdAt: Date;
   updatedAt: Date | null;
 }
+
+export interface IaTask {
+  title: string;
+  description: string;
+  priority: "HIGH" | "MEDIUM" | "LOW";
+  dueDate: string | null;
+}

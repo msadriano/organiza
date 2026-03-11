@@ -1,6 +1,6 @@
 import { AiPromptSchema } from "./ai.schema";
 import { prisma } from "../../lib/prisma";
-import { geminiClient } from "../../lib/gemini";
+import { iaClient } from "../../lib/anthropic";
 import { AppError } from "../../utils/app.error";
 import { ListsService } from "../lists/lists.service";
 import { List } from "../../types/lists.type";
@@ -18,11 +18,7 @@ class AiService {
       },
     });
 
-    const today = new Date().toISOString();
-
     const systemPrompt = `Você é um assistente de produtividade integrado a um app de tarefas.
-
-    A data e hora atual é: ${today}
     
     Seu trabalho é interpretar solicitações em linguagem natural e retornar APENAS um objeto JSON válido, sem texto adicional, sem markdown, sem explicações.
 
@@ -59,25 +55,21 @@ class AiService {
     - dueDate deve ser null se não for mencionado
     - Responda APENAS com o JSON, sem nenhum texto adicional`;
 
-    const model = geminiClient.getGenerativeModel({
-      model: "gemini-2.5-flash-lite",
+    const message = await iaClient.messages.create({
+      max_tokens: 1024,
+      messages: [{ content: prompt.prompt, role: "user" }],
+      model: "claude-sonnet-4-20250514",
+      system: systemPrompt,
     });
 
-    const result = await model.generateContent(
-      prompt.prompt + "\n\n" + systemPrompt,
-    );
-
-    const responseText = result.response.text();
+    const responseText =
+      message.content[0].type === "text" ? message.content[0].text : null;
 
     if (!responseText) {
       throw new AppError("A IA não retornou uma resposta válida", 500);
     }
 
-    const cleanedResponse = responseText
-      .replace(/```json\n?|\n?```/g, "")
-      .trim();
-
-    const responseJson = JSON.parse(cleanedResponse);
+    const responseJson = JSON.parse(responseText);
 
     if (responseJson.action === "create_list") {
       const createdList: List = await ListsService.createList(
@@ -88,22 +80,19 @@ class AiService {
       const dataTasks = responseJson.tasks.map((task: IaTask) => {
         return {
           ...task,
-          dueDate: task.dueDate ? new Date(task.dueDate) : null,
           listId: createdList.id,
         };
       });
-      console.log("createlist", dataTasks);
       const tasksCreated = await TaskService.createManyTasks(dataTasks);
+
       return tasksCreated;
     } else {
       const dataTasks = responseJson.tasks.map((task: IaTask) => {
         return {
           ...task,
-          dueDate: task.dueDate ? new Date(task.dueDate) : null,
           listId: responseJson.listId,
         };
       });
-      console.log("createTask", dataTasks);
       const tasksCreated = await TaskService.createManyTasks(dataTasks);
 
       return tasksCreated;
