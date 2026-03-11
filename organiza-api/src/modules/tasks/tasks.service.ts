@@ -5,17 +5,30 @@ import { TaskCreateManySchema, TaskCreateSchema } from "./tasks.schema";
 import { Priority, Status } from "@prisma/client";
 
 class TaskService {
-  static async createNewTask(data: TaskCreateSchema): Promise<Task> {
+  static async createNewTask(
+    userId: string,
+    data: TaskCreateSchema,
+  ): Promise<Task> {
+    const list = await prisma.list.findUnique({ where: { id: data.listId } });
+
+    if (!list) {
+      throw new AppError("Lista não encontrada", 404);
+    }
+
+    if (userId !== list?.userId) {
+      throw new AppError("Não autorizado", 403);
+    }
+
     const createdTask = await prisma.task.create({ data: data });
 
     return createdTask;
   }
 
-  static async getTasksByListId(id: string): Promise<Task[]> {
+  static async getTasksByListId(userId: string, id: string): Promise<Task[]> {
     const listId = id;
 
     const selectedTasks = await prisma.task.findMany({
-      where: { listId },
+      where: { listId, list: { userId } },
       orderBy: { createdAt: "desc" },
     });
 
@@ -23,6 +36,7 @@ class TaskService {
   }
 
   static async updateTask(
+    userId: string,
     id: string,
     title: string,
     description: string,
@@ -30,7 +44,9 @@ class TaskService {
     status: Status,
     dueDate: string,
   ): Promise<Task> {
-    const selectedTask = await prisma.task.findUnique({ where: { id } });
+    const selectedTask = await prisma.task.findUnique({
+      where: { id, list: { userId } },
+    });
 
     if (!selectedTask) {
       throw new AppError("Tarefa não encontrada", 404);
@@ -51,8 +67,10 @@ class TaskService {
     return updatedTask;
   }
 
-  static async deleteTask(id: string): Promise<Task> {
-    const selectedTask = await prisma.task.findUnique({ where: { id } });
+  static async deleteTask(userId: string, id: string): Promise<Task> {
+    const selectedTask = await prisma.task.findUnique({
+      where: { id, list: { userId } },
+    });
 
     if (!selectedTask) {
       throw new AppError("Tarefa não encontrada", 404);

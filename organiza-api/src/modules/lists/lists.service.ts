@@ -1,7 +1,6 @@
 import { AppError } from "../../utils/app.error";
 import { prisma } from "../../lib/prisma";
 import type { List } from "../../types/lists.type";
-import { ListParamsUpdateSchema } from "./lists.schema";
 
 class ListsService {
   static async createList(
@@ -26,11 +25,14 @@ class ListsService {
   }
 
   static async updateList(
+    userId: string,
     id: string,
     title: string,
     color: string,
   ): Promise<List> {
-    const selectedList = await prisma.list.findUnique({ where: { id } });
+    const selectedList = await prisma.list.findUnique({
+      where: { id, userId },
+    });
 
     if (!selectedList) {
       throw new AppError(
@@ -40,15 +42,15 @@ class ListsService {
     }
 
     const updatedList = await prisma.list.update({
-      where: { id },
+      where: { id, userId },
       data: { ...(title && { title }), ...(color && { color }) },
     });
 
     return updatedList;
   }
 
-  static async deleteList(id: string): Promise<List> {
-    const selectList = await prisma.list.findUnique({ where: { id } });
+  static async deleteList(userId: string, id: string): Promise<List> {
+    const selectList = await prisma.list.findUnique({ where: { id, userId } });
 
     if (!selectList) {
       throw new AppError(

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const aiPromptSchema = z.object({
-  prompt: z.string().min(1, "O prompt não pode ser vazio"),
+  prompt: z.string().min(1, "O prompt não pode ser vazio").max(2000),
 });
 
 export { aiPromptSchema };

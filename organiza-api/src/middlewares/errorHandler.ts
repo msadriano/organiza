@@ -18,8 +18,8 @@ function ErrorHandler(
       issues: error.format(),
     });
   }
-
-  return res.status(500).json({ message: error.message });
+  console.error(error.message)
+  return res.status(500).json({message: "Erro interno do servidor"});
 }
 
 export { ErrorHandler };

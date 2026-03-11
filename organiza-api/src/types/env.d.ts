@@ -2,9 +2,8 @@ declare namespace NodeJS {
   interface ProcessEnv {
     PORT: string;
     DATABASE_URL: string;
-    ANTHROPIC_API_KEY: string;
+    // ANTHROPIC_API_KEY: string;
     SUPABASE_JWKS_URI: string;
-    ANTHROPIC_API_KEY: string;
-    GEMINI_APY_KEY: string;
+    GEMINI_API_KEY: string;
   }
 }

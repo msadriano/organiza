@@ -26,7 +26,7 @@ const taskCreateManySchema = z.object({
   description: z.string().optional(),
   priority: z.nativeEnum(Priority).default("LOW"),
   dueDate: z.coerce.date().optional(),
-  listId: z.string(),
+  listId: z.string().uuid(),
 });
 
 export { taskCreateSchema, taskUpdateSchema, taskCreateManySchema };

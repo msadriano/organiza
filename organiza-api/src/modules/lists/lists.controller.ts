@@ -28,25 +28,35 @@ class ListsController {
   }
 
   static async updateList(req: Request, res: Response) {
+    const userId = req.userId;
     const { id } = req.params as { id: string };
     const { title, color } = req.body;
+
+    if (!userId) {
+      throw new AppError("Usuário não tem autorização", 401);
+    }
 
     if (!title && !color) {
       throw new AppError(
         "Não existe nenhuma informação para ser atualizada",
-        200,
+        400,
       );
     }
 
-    await ListsService.updateList(id, title, color);
+    await ListsService.updateList(userId, id, title, color);
 
     return res.status(204).send();
   }
 
   static async deleteList(req: Request, res: Response) {
+    const userId = req.userId;
     const { id } = req.params as { id: string };
 
-    const deletedList = await ListsService.deleteList(id);
+    if (!userId) {
+      throw new AppError("Não autorizado", 401);
+    }
+
+    const deletedList = await ListsService.deleteList(userId, id);
 
     return res.status(200).json(deletedList);
   }

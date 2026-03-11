@@ -20,7 +20,9 @@ async function handleValidation(
       })),
     });
   }
-  req.body = result.data;
+
+  req.body = { ...req.body, ...result.data };
+
   next();
 }
 

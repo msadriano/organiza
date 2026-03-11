@@ -77,7 +77,13 @@ class AiService {
       .replace(/```json\n?|\n?```/g, "")
       .trim();
 
-    const responseJson = JSON.parse(cleanedResponse);
+    let responseJson;
+
+    try {
+      responseJson = JSON.parse(cleanedResponse);
+    } catch (error) {
+      throw new AppError("a IA retornou uma resposta inesperada", 502);
+    }
 
     if (responseJson.action === "create_list") {
       const createdList: List = await ListsService.createList(
@@ -92,10 +98,18 @@ class AiService {
           listId: createdList.id,
         };
       });
-      console.log("createlist", dataTasks);
+
       const tasksCreated = await TaskService.createManyTasks(dataTasks);
       return tasksCreated;
     } else {
+      const listBelongsToUser = listsByUser.some(
+        (list) => list.id === responseJson.listId,
+      );
+
+      if (!listBelongsToUser) {
+        throw new AppError("Lista não encontrada", 404);
+      }
+
       const dataTasks = responseJson.tasks.map((task: IaTask) => {
         return {
           ...task,
@@ -103,7 +117,7 @@ class AiService {
           listId: responseJson.listId,
         };
       });
-      console.log("createTask", dataTasks);
+
       const tasksCreated = await TaskService.createManyTasks(dataTasks);
 
       return tasksCreated;

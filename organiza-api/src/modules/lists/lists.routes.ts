@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { ListsController } from "./lists.controller";
 import { validateBody, validateParams } from "../../middlewares/validate";
+import { authEnsure } from "../../middlewares/authEnsure";
 import {
   listBodyUpdateSchema,
   listCreateSchema,
   idParamsValidateSchema,
 } from "./lists.schema";
-import { authEnsure } from "../../middlewares/authEnsure";
 
 const listsRoutes = Router();
 
