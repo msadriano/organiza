@@ -1,5 +1,6 @@
 import "express-async-errors";
 import express from "express";
+import cors from "cors";
 import { routes } from "./routes/routes";
 import { ErrorHandler } from "./middlewares/errorHandler";
 import helmet from "helmet";
@@ -16,6 +17,12 @@ const app = express();
 
 app.use(limiter);
 app.use(helmet());
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(routes);
 
