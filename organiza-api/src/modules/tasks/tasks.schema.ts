@@ -6,7 +6,7 @@ const taskCreateSchema = z.object({
   title: z.string().min(1, "O título da tarefa não pode ficar em branco"),
   description: z.string().optional(),
   priority: z.nativeEnum(Priority).default("LOW"),
-  status: z.nativeEnum(Status).default("PENDING"),
+  status: z.nativeEnum(Status).default("TODO"),
   dueDate: z.coerce.date().optional(),
 });
 
