@@ -1,7 +1,12 @@
 import { Router } from "express";
 import { authEnsure } from "../../middlewares/authEnsure";
 import { validateBody, validateParams } from "../../middlewares/validate";
-import { taskCreateSchema, taskUpdateSchema } from "./tasks.schema";
+import {
+  taskCreateSchema,
+  taskDeleteBodySchema,
+  taskUpdateSchema,
+  taskUpdateManySchema,
+} from "./tasks.schema";
 import { TaskController } from "./tasks.controller";
 import { idParamsValidateSchema } from "../lists/lists.schema";
 
@@ -12,6 +17,15 @@ tasksRoutes.post(
   authEnsure,
   validateBody(taskCreateSchema),
   TaskController.createTask,
+);
+
+tasksRoutes.get("/", authEnsure, TaskController.getTasksByUserId);
+
+tasksRoutes.patch(
+  "/",
+  authEnsure,
+  validateBody(taskUpdateManySchema),
+  TaskController.updateManyTasks,
 );
 
 tasksRoutes.get(
@@ -30,9 +44,9 @@ tasksRoutes.put(
 );
 
 tasksRoutes.delete(
-  "/:id",
+  "/",
   authEnsure,
-  validateParams(idParamsValidateSchema),
+  validateBody(taskDeleteBodySchema),
   TaskController.deleteTask,
 );
 

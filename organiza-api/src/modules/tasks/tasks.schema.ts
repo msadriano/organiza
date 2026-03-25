@@ -29,8 +29,34 @@ const taskCreateManySchema = z.object({
   listId: z.string().uuid(),
 });
 
-export { taskCreateSchema, taskUpdateSchema, taskCreateManySchema };
+const taskQueryParams = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  priority: z.nativeEnum(Priority).optional(),
+  status: z.nativeEnum(Status).optional(),
+});
+
+const taskDeleteBodySchema = z.object({
+  id: z.array(z.string().uuid()).min(1, "Envie ao menos um id"),
+});
+
+const taskUpdateManySchema = z.object({
+  ids: z.array(z.string().uuid()).min(1, "Envie ao menos um id"),
+  priority: z.nativeEnum(Priority).optional(),
+  status: z.nativeEnum(Status).optional(),
+  dueDate: z.coerce.date().optional(),
+});
+export {
+  taskCreateSchema,
+  taskUpdateSchema,
+  taskCreateManySchema,
+  taskQueryParams,
+  taskDeleteBodySchema,
+  taskUpdateManySchema,
+};
 
 export type TaskCreateSchema = z.infer<typeof taskCreateSchema>;
 export type TaskUpdateSchema = z.infer<typeof taskUpdateSchema>;
 export type TaskCreateManySchema = z.infer<typeof taskCreateManySchema>;
+export type TaskQueryParams = z.infer<typeof taskQueryParams>;
+export type TaskDeleteBodySchema = z.infer<typeof taskDeleteBodySchema>;
