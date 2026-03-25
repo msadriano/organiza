@@ -34,11 +34,13 @@ async function authEnsure(req: Request, res: Response, next: NextFunction) {
     const signingKey = key.getPublicKey();
 
     const verifiedToken = verify(token, signingKey, {
-      algorithms: ["RS256"],
+      algorithms: ["ES256"],
     }) as JwtPayload;
 
     req.userId = verifiedToken.sub;
+
   } catch (error) {
+
     throw new AppError("Token inválido", 401);
   }
 
