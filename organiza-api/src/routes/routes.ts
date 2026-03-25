@@ -5,6 +5,7 @@ import { tasksRoutes } from "../modules/tasks/tasks.routes";
 import { listsRoutes } from "../modules/lists/lists.routes";
 import { aiRoutes } from "../modules/ai/ai.routes";
 import { authRoutes } from "../modules/auth/auth.routes";
+import { usersRoutes } from "../modules/users/users.routes";
 
 const routes = Router();
 
@@ -16,5 +17,6 @@ routes.use("/api/auth", authRoutes);
 routes.use("/api/tasks", tasksRoutes);
 routes.use("/api/lists", listsRoutes);
 routes.use("/api/ai", aiRoutes);
+routes.use("/api/users", usersRoutes)
 
 export { routes };
