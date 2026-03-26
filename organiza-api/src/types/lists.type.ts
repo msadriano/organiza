@@ -6,3 +6,7 @@ export interface List {
     createdAt: Date
     updatedAt: Date | null
 }
+
+export interface ListOverview extends List{
+    countTasks: number
+}

@@ -1,6 +1,6 @@
 import { AppError } from "../../utils/app.error";
 import { prisma } from "../../lib/prisma";
-import type { List } from "../../types/lists.type";
+import type { List, ListOverview } from "../../types/lists.type";
 
 class ListsService {
   static async createList(
@@ -17,13 +17,21 @@ class ListsService {
     return createdList;
   }
 
-  static async getAllLists(userId: string): Promise<List[]> {
+  static async getAllLists(userId: string): Promise<ListOverview[]> {
     const lists = await prisma.list.findMany({
       where: { userId },
+      include: {
+        _count: {
+          select: {tasks: true}
+        }
+      },
       orderBy: { createdAt: "desc" },
     });
 
-    return lists;
+    return lists.map((list)=>({
+      ...list,
+      countTasks: list._count.tasks
+    })) as ListOverview[]
   }
 
   static async updateList(

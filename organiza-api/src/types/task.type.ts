@@ -10,6 +10,11 @@ export interface Task {
   updatedAt: Date | null;
 }
 
+export interface TaskOverview {
+  tasks: Task[];
+  count: number;
+}
+
 export interface IaTask {
   title: string;
   description: string;
