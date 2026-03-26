@@ -33,9 +33,12 @@ export default function Header() {
     setPriorityWhereFilter,
     setCreateTaskListId,
   } = useAppStore();
+  const [mounted, setMounted] = useState(false);
   const IsMobile = useIsMobile();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [searchInput, setSearchInput] = useState("");
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -43,6 +46,8 @@ export default function Header() {
     }, 300);
     return () => clearTimeout(t);
   }, [searchInput, setSearchWhereFilter]);
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <header className="p-4 md:px-8 md:py-6 border-b border-sidebar-border bg-surface">
@@ -62,18 +67,22 @@ export default function Header() {
           <Plus strokeWidth={3} color="#fff" />
           {!IsMobile && "Nova tarefa"}
         </Button>
-        <Toggle
-          size="sm"
-          className="rounded-full h-8 w-8 border border-sidebar-border bg-gray-100 cursor-pointer"
-          pressed={theme === "dark"}
-          onPressedChange={(pressed) => setTheme(pressed ? "dark" : "light")}
-        >
-          {theme === "dark" ? (
-            <Sun className="text-primary" />
-          ) : (
-            <Moon className="text-primary" />
-          )}
-        </Toggle>
+        {!mounted ? (
+          <div className="h-8 w-8 rounded-full border border-sidebar-border bg-gray-100" />
+        ) : (
+          <Toggle
+            size="sm"
+            className="rounded-full h-8 w-8 border border-sidebar-border bg-gray-100 cursor-pointer"
+            pressed={isDark}
+            onPressedChange={(pressed) => setTheme(pressed ? "dark" : "light")}
+          >
+            {isDark ? (
+              <Sun className="text-primary" />
+            ) : (
+              <Moon className="text-primary" />
+            )}
+          </Toggle>
+        )}
       </div>
       <div className="flex flex-col md:flex-row gap-2">
         <div className="p-0.5 flex flex-row items-center justify-evenly border border-sidebar-border rounded-md bg-background">

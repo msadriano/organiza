@@ -11,7 +11,7 @@ export default function AppClienteProviders({
 }) {
   const [queryClient] = useState(() => new QueryClient());
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ThemeProvider>
   );
