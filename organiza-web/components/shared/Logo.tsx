@@ -4,18 +4,25 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   type: "simple" | "complete";
-  className: string;
+  className?: string;
+  classIcon?: string;
 }
 
-export default function Logo({ type, className }: LogoProps) {
+export default function Logo({ type, className, classIcon }: LogoProps) {
   return (
     <div
       className={cn(
-        "flex flex-row w-10 items-center justify-center ",
+        "flex flex-row items-center justify-center gap-2",
         className,
       )}
     >
-      <Image src={simpleLogo} alt="Logo do Organiza" priority/>
+      <Image
+        src={simpleLogo}
+        alt="Logo do Organiza"
+        className={cn(classIcon)}
+        priority
+      />
+      <span className="font-bold">organiza</span>
     </div>
   );
 }
