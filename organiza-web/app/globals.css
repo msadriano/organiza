@@ -13,6 +13,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-hover: var(--sidebar-hover);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -27,6 +28,7 @@
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
@@ -49,22 +51,23 @@
 
 :root {
   /* shadcn base */
-  --background: oklch(0.9864 0.0028 308.43);
+  --background: oklch(0.9745 0.0028 308.43);
   --foreground: oklch(0.2291 0.0623 296.55);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2291 0.0623 296.55);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2291 0.0623 296.55);
-  --primary: oklch(0.4867 0.1417 304.49);
+  --primary: oklch(0.4837 0.1377 304.88);
+  /* --primary: oklch(0.4867 0.1417 304.49); */
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.8217 0.0333 321.15);
-  --secondary-foreground: oklch(0.2291 0.0623 296.55);
+  --secondary: oklch(0.9274 0.0076 345.36);
+  --secondary-foreground: oklch(10.328% 0.01463 297.591);
+  --tertiary: oklch(0.9864 0.0028 308.43);
   --muted: oklch(0.9274 0.0076 345.36);
   --muted-foreground: oklch(0.5331 0.0233 285.58);
   --accent: oklch(0.9274 0.0076 345.36);
   --accent-foreground: oklch(0.2291 0.0623 296.55);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9659 0 321.15);
   --input: oklch(0.8217 0.0333 321.15);
   --ring: oklch(0.4867 0.1417 304.49);
   --radius: 0.625rem;
@@ -77,14 +80,21 @@
   --text-light: oklch(0.5331 0.0233 285.58);
 
   /* Sidebar */
-  --sidebar: oklch(0.9274 0.0076 345.36);
+  --sidebar: oklch(0.98 0.002 0);
   --sidebar-foreground: oklch(0.2291 0.0623 296.55);
-  --sidebar-primary: oklch(0.4867 0.1417 304.49);
+  --sidebar-primary: oklch(0.45 0.15 290);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.8217 0.0333 321.15);
+  --sidebar-accent: oklch(0.4849 0.139 307.22);
   --sidebar-accent-foreground: oklch(0.2291 0.0623 296.55);
-  --sidebar-border: oklch(0.8217 0.0333 321.15);
-  --sidebar-ring: oklch(0.4867 0.1417 304.49);
+  --sidebar-accent-text: oklch(1 0 0);
+  --sidebar-hover: oklch(0.9126 0.0148 322.34);
+  --sidebar-border: oklch(0.92 0.01 0);
+  --sidebar-ring: oklch(0.45 0.15 290);
+
+  /* Badges */
+  --badge-list-bg: oklch(94.6% 0.033 307.174);
+  --badge-list-border: oklch(90.2% 0.063 306.703);
+  --badge-list-text: oklch(43.8% 0.218 303.724);
 }
 
 .dark {
@@ -94,7 +104,8 @@
   --card-foreground: oklch(0.9864 0.0028 308.43);
   --popover: oklch(0.27 0.07 296.55);
   --popover-foreground: oklch(0.9864 0.0028 308.43);
-  --primary: oklch(0.6537 0.1197 314.28);
+  --primary: oklch(0.4837 0.1377 304.88);
+  /* --primary: oklch(0.6537 0.1197 314.28); */
   --primary-foreground: oklch(0.2291 0.0623 296.55);
   --secondary: oklch(0.35 0.05 296.55);
   --secondary-foreground: oklch(0.9864 0.0028 308.43);
@@ -115,14 +126,16 @@
   --text-light: oklch(0.7 0.03 296.55);
 
   /* Sidebar dark */
-  --sidebar: oklch(0.27 0.07 296.55);
+  --sidebar: oklch(0.2 0.01 0);
   --sidebar-foreground: oklch(0.9864 0.0028 308.43);
-  --sidebar-primary: oklch(0.6537 0.1197 314.28);
-  --sidebar-primary-foreground: oklch(0.2291 0.0623 296.55);
-  --sidebar-accent: oklch(0.35 0.05 296.55);
+  --sidebar-primary: oklch(0.52 0.14 290);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.4849 0.139 307.22);
   --sidebar-accent-foreground: oklch(0.9864 0.0028 308.43);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.6537 0.1197 314.28);
+  --sidebar-accent-text: oklch(1 0 0);
+  --sidebar-hover: oklch(44.922% 0.18601 322.754 / 0.692);
+  --sidebar-border: oklch(0.3 0.01 0);
+  --sidebar-ring: oklch(0.52 0.14 290);
 }
 
 @layer base {
@@ -189,5 +202,23 @@
     border: 1px solid var(--border);
     padding: 24px;
     box-shadow: 0px 2px 10px rgba(90, 90, 90, 0.1);
+  }
+}
+
+@keyframes collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
   }
 }
