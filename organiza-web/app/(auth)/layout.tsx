@@ -9,7 +9,7 @@ export default function AuthLayout({
   return (
     <div className="flex h-screen w-full items-center justify-center px-18">
       <div className="card w-full max-w-md flex flex-col items-center justify-start">
-        <Logo type="simple" className="mb-5" />
+        <Logo type="complete" classIcon="h-8 w-8" className="mb-5 text-3xl" />
         {children}
       </div>
     </div>

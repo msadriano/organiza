@@ -122,7 +122,7 @@ export default function RegisterForm() {
         password: dataForm.password,
         options: {
           data: {
-            name: dataForm.name,
+            full_name: dataForm.name,
           },
         },
       });
