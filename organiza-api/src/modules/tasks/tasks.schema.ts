@@ -11,6 +11,7 @@ const taskCreateSchema = z.object({
 });
 
 const taskUpdateSchema = z.object({
+  listId: z.string().uuid().optional(),
   title: z
     .string()
     .min(1, "O título da tarefa não pode ficar em branco")

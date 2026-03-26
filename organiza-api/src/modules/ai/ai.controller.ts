@@ -7,6 +7,8 @@ class AiController {
     const userId = req.userId;
     const prompt = req.body;
 
+    console.log("controller ai")
+
     if (!userId) {
       throw new AppError("Usuário não autorizado", 401);
     }

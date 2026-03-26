@@ -1,6 +1,7 @@
 import { AiPromptSchema } from "./ai.schema";
 import { prisma } from "../../lib/prisma";
-import { geminiClient } from "../../lib/gemini";
+//import { geminiClient } from "../../lib/gemini";
+import { groq } from "../../lib/groq";
 import { AppError } from "../../utils/app.error";
 import { ListsService } from "../lists/lists.service";
 import { List } from "../../types/lists.type";
@@ -35,7 +36,8 @@ class AiService {
         "action": "create_list",
         "list": {
             "title": "Nome da lista",
-            "color": "#hexcolor"
+            "color": "#hexcolor",
+            "requestedList": "Nome da lista mencionado pelo usuário"
         },
         "tasks": [
             {
@@ -53,21 +55,39 @@ class AiService {
     }
 
     Regras:
-    - Se o usuário mencionar uma lista que já existe, use o id dela e a action "create_tasks"
+    - Se o usuário mencionar uma lista, verifique os títulos das lista já cadastradas
+    - Caso o título da lista já exista nas listas cadastradas (o título deve ser exatamente o mencionado pelo usuário), use o id dela e a action "create_tasks"
+    - O título da lista mencionada pelo usuário deve ser exatamente igual ao da lista já cadastrada (a única exceção é quando é Case-insensitive)
     - Se a lista não existir, use "create_list" e crie junto com as tarefas
     - Priority deve ser inferida pelo contexto — tarefas urgentes são HIGH, normais MEDIUM, sem urgência LOW
     - dueDate deve ser null se não for mencionado
     - Responda APENAS com o JSON, sem nenhum texto adicional`;
 
-    const model = geminiClient.getGenerativeModel({
-      model: "gemini-2.5-flash-lite",
+    // const model = geminiClient.getGenerativeModel({
+    //   model: "gemini-3-flash-preview",
+    // });
+
+    // const result = await model.generateContent(
+    //   prompt.prompt + "\n\n" + systemPrompt,
+    // );
+    // const responseText = result.response.text();
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: systemPrompt,
+        },
+        {
+          role: "user",
+          content: prompt.prompt,
+        },
+      ],
+      temperature: 0.2,
     });
 
-    const result = await model.generateContent(
-      prompt.prompt + "\n\n" + systemPrompt,
-    );
-
-    const responseText = result.response.text();
+    const responseText = completion.choices[0]?.message?.content;
 
     if (!responseText) {
       throw new AppError("A IA não retornou uma resposta válida", 500);
@@ -75,6 +95,7 @@ class AiService {
 
     const cleanedResponse = responseText
       .replace(/```json\n?|\n?```/g, "")
+      .replace(/\n/g, "")
       .trim();
 
     let responseJson;

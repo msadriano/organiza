@@ -58,21 +58,12 @@ class TaskController {
   static async updateTask(req: Request, res: Response) {
     const userId = req.userId;
     const { id } = req.params;
-    const { title, description, priority, status, dueDate } = req.body;
 
     if (!userId) {
       throw new AppError("Não autorizado", 401);
     }
 
-    const updatedTask = await TaskService.updateTask(
-      userId,
-      id,
-      title,
-      description,
-      priority,
-      status,
-      dueDate,
-    );
+    const updatedTask = await TaskService.updateTask(userId, id, req.body);
 
     return res.status(200).json(updatedTask);
   }

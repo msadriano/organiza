@@ -6,6 +6,7 @@ import {
   TaskCreateSchema,
   TaskDeleteBodySchema,
   TaskQueryParams,
+  TaskUpdateSchema,
 } from "./tasks.schema";
 import { Priority, Status } from "@prisma/client";
 
@@ -120,13 +121,9 @@ class TaskService {
   static async updateTask(
     userId: string,
     id: string,
-    title: string,
-    description: string,
-    priority: Priority,
-    status: Status,
-    dueDate: string,
+    data: TaskUpdateSchema,
   ): Promise<Task> {
-    const selectedTask = await prisma.task.findUnique({
+    const selectedTask = await prisma.task.findFirst({
       where: { id, list: { userId } },
     });
 
@@ -134,13 +131,25 @@ class TaskService {
       throw new AppError("Tarefa não encontrada", 404);
     }
 
+    if (data.listId) {
+      const list = await prisma.list.findFirst({
+        where: { id: data.listId, userId },
+      });
+
+      if (!list) {
+        throw new AppError("Lista não encontrada", 404);
+      }
+    }
+
     const dataToUpdate = {
-      ...(title && { title }),
-      ...(description && { description }),
-      ...(priority && { priority }),
-      ...(status && { status }),
-      ...(dueDate && { dueDate }),
+      ...(data.listId !== undefined && { listId: data.listId }),
+      ...(data.title !== undefined && { title: data.title }),
+      ...(data.description !== undefined && { description: data.description }),
+      ...(data.priority !== undefined && { priority: data.priority }),
+      ...(data.status !== undefined && { status: data.status }),
+      ...(data.dueDate !== undefined && { dueDate: data.dueDate }),
     };
+
     const updatedTask = await prisma.task.update({
       where: { id },
       data: dataToUpdate,

@@ -12,6 +12,8 @@ class ListsService {
       data: { userId, title, ...(color && { color }) },
     });
 
+    console.log(createdList)
+
     return createdList;
   }
 
