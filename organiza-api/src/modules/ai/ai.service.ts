@@ -1,6 +1,5 @@
 import { AiPromptSchema } from "./ai.schema";
 import { prisma } from "../../lib/prisma";
-//import { geminiClient } from "../../lib/gemini";
 import { groq } from "../../lib/groq";
 import { AppError } from "../../utils/app.error";
 import { ListsService } from "../lists/lists.service";
