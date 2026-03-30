@@ -3,7 +3,6 @@ declare namespace NodeJS {
     PORT: string;
     DATABASE_URL: string;
     SUPABASE_JWKS_URI: string;
-    GEMINI_API_KEY: string;
     GROQ_API_KEY: string;
   }
 }
