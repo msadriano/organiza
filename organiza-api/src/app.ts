@@ -19,7 +19,7 @@ app.use(limiter);
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: "*",
     credentials: true,
   }),
 );
