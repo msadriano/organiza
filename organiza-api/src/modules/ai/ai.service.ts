@@ -98,7 +98,7 @@ class AiService {
       .replace(/\n/g, "")
       .trim();
 
-    let responseJson;
+    let responseJson: any;
 
     try {
       responseJson = JSON.parse(cleanedResponse);
