@@ -20,7 +20,7 @@ export default function LoginPage() {
         </div>
       </div>
       <GoogleButton />
-      <span className="flex flex-row items-center gap-2">
+      <span className="flex flex-col md:flex-row items-center gap-2">
         <p className="text-xs">Não tem uma conta?</p>
         <Link href="/register" className="text-xs text-primary">
           Criar nova conta
